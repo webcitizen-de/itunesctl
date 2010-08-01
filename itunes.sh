@@ -1,10 +1,10 @@
 #!/bin/bash
-#!/bin/sh
 #
 ####################################
 # iTunes Command Line Control v1.0
 # written by David Schlosnagle
 # created 2001.11.08
+# edit    2010.06.01 rahul kumar
 ####################################
 
 showHelp () {
@@ -27,6 +27,7 @@ showHelp () {
     echo " stop     = Stop iTunes.";
     echo " quit     = Quit iTunes.";
     echo " playlist = Show playlists saved in iTunes.";
+    echo " tracks   = Show tracks for current or given playlist.";
     echo " shuf     = Shuffle current playlist";
     echo " nosh     = Do not shuffle current playlist"; 
 }
