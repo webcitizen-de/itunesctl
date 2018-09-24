@@ -1,11 +1,13 @@
 #!/bin/bash
 #
-####################################
-# iTunes Command Line Control v1.0
+###################################################
+# iTunes Command Line Control v1.1
 # written by David Schlosnagle
-# created 2001.11.08
-# edit    2010.06.01 rahul kumar
-####################################
+# created   2001-11-08
+# edited    2010-06-01 rahul kumar
+# Upstream  https://gist.github.com/rkumar/503162
+# edited    2018-09-24 Christopher Engelmann
+###################################################
 
 showHelp () {
     echo "-----------------------------";
@@ -14,27 +16,40 @@ showHelp () {
     echo "Usage: `basename $0` <option>";
     echo;
     echo "Options:";
-    echo " status   = Shows iTunes' status, current artist and track.";
-    echo " play     = Start playing iTunes.";
-    echo " pause    = Pause iTunes.";
-    echo " next     = Go to the next track.";
-    echo " prev     = Go to the previous track.";
-    echo " mute     = Mute iTunes' volume.";
-    echo " unmute   = Unmute iTunes' volume.";
-    echo " vol up   = Increase iTunes' volume by 10%";
-    echo " vol down = Increase iTunes' volume by 10%";
-    echo " vol #    = Set iTunes' volume to # [0-100]";
-    echo " stop     = Stop iTunes.";
-    echo " quit     = Quit iTunes.";
-    echo " playlist = Show playlists saved in iTunes.";
-    echo " tracks   = Show tracks for current or given playlist.";
-    echo " shuf     = Shuffle current playlist";
-    echo " nosh     = Do not shuffle current playlist"; 
+    echo " status       = Shows iTunes' status, current artist and track.";
+    echo " play         = Start playing iTunes.";
+    echo " pause        = Pause iTunes.";
+    echo " next         = Go to the next track.";
+    echo " prev         = Go to the previous track.";
+    echo " mute         = Mute iTunes' volume.";
+    echo " unmute       = Unmute iTunes' volume.";
+    echo " vol up       = Increase iTunes' volume by 10%";
+    echo " vol down     = Increase iTunes' volume by 10%";
+    echo " vol #        = Set iTunes' volume to # [0-100]";
+    echo " speaker up   = Increase system speaker volume by 10%";
+    echo " speaker down = Decrease system speaker volume by 10%";
+    echo " speaker #    = Set system speaker volume to # [0-10]";
+    echo " stop         = Stop iTunes.";
+    echo " quit         = Quit iTunes.";
+    echo " playlist     = Show playlists saved in iTunes.";
+    echo " tracks       = Show tracks for current or given playlist.";
+    echo " shuf         = Shuffle current playlist";
+    echo " nosh         = Do not shuffle current playlist";
 }
 
 if [ $# = 0 ]; then
     showHelp;
 fi
+
+function volumectl {
+    if [ $1 = "up" ]; then
+        newvol=$(( vol+1 ));
+    elif [ $1 = "down" ]; then
+        newvol=$(( vol-1 ));
+    elif [ $1 -gt -1 ]; then
+        newvol=$1;
+    fi
+}
 
 while [ $# -gt 0 ]; do
     arg=$1;
@@ -52,7 +67,7 @@ while [ $# -gt 0 ]; do
             osascript -e 'tell application "iTunes" to play';
             break ;;
 
-        "pause"    ) echo "Pausing iTunes.";
+        "pause"   ) echo "Pausing iTunes.";
             osascript -e 'tell application "iTunes" to pause';
             break ;;
 
@@ -68,26 +83,25 @@ while [ $# -gt 0 ]; do
             osascript -e 'tell application "iTunes" to set mute to true';
             break ;;
 
-        "unmute" ) echo "Unmuting iTunes volume level.";
+        "unmute"  ) echo "Unmuting iTunes volume level.";
             osascript -e 'tell application "iTunes" to set mute to false';
             break ;;
 
-        "vol"    ) echo "Changing iTunes volume level.";
+        "vol"     ) echo "Changing iTunes volume level.";
             vol=`osascript -e 'tell application "iTunes" to sound volume as integer'`;
-            if [ $2 = "up" ]; then
-                newvol=$(( vol+10 ));
-            elif [ $2 = "down" ]; then
-                newvol=$(( vol-10 ));
-            elif [ $2 -gt 0 ]; then
-                newvol=$2;
-            fi
+            volumectl $2
             osascript -e "tell application \"iTunes\" to set sound volume to $newvol";
+            break ;;
+
+        "speaker" ) echo "Changing Mac speaker volume level.";
+            volumectl $2
+            osascript -e "set Volume $newvol"
             break ;;
 
         "stop"    ) echo "Stopping iTunes.";
             osascript -e 'tell application "iTunes" to stop';
             break ;;
-            
+
         "quit"    ) echo "Quitting iTunes.";
             osascript -e 'tell application "iTunes" to quit';
             exit 1 ;;
@@ -96,7 +110,7 @@ while [ $# -gt 0 ]; do
        "playlist" )
           if [ -n "$2" ]; then
              echo "Changing iTunes playlists to '$2'.";
-             osascript -e 'tell application "iTunes"' -e "set new_playlist to \"$2\" as string" -e "play playlist new_playlist" -e "end tell"; 
+             osascript -e 'tell application "iTunes"' -e "set new_playlist to \"$2\" as string" -e "play playlist new_playlist" -e "end tell";
             break ;
           else
             # Show available iTunes playlists.
@@ -112,14 +126,14 @@ while [ $# -gt 0 ]; do
 
        "nosh" ) echo "Shuffle is OFF.";
              osascript -e 'tell application "iTunes" to set shuffle of current playlist to 0';
-             break ;; 
+             break ;;
        "tracks" )
           if [ -n "$2" ]; then
-             osascript -e 'tell application "iTunes"' -e "set new_playlist to \"$2\" as string" -e " get name of every track in playlist new_playlist" -e "end tell"; 
+             osascript -e 'tell application "iTunes"' -e "set new_playlist to \"$2\" as string" -e " get name of every track in playlist new_playlist" -e "end tell";
              break;
          fi
              osascript -e 'tell application "iTunes" to get name of every track in current playlist';
-             break ;; 
+             break ;;
         "help" | * ) echo "help:";
             showHelp;
 
