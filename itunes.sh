@@ -12,28 +12,29 @@ showHelp () {
     echo "-----------------------------";
     echo "iTunes Command Line Interface";
     echo "-----------------------------";
-    echo "Usage: `basename $0` <option>";
+    echo "Usage: `basename $0` subcommand";
     echo;
     echo "Options:";
-    echo " status       = Shows iTunes' status, current artist and track.";
-    echo " play         = Start playing iTunes.";
-    echo " pause        = Pause iTunes.";
-    echo " next         = Go to the next track.";
-    echo " prev         = Go to the previous track.";
-    echo " mute         = Mute iTunes' volume.";
-    echo " unmute       = Unmute iTunes' volume.";
-    echo " vol up       = Increase iTunes' volume by 10%";
-    echo " vol down     = Increase iTunes' volume by 10%";
-    echo " vol #        = Set iTunes' volume to # [0-100]";
-    echo " speaker up   = Increase system speaker volume by 10%";
-    echo " speaker down = Decrease system speaker volume by 10%";
-    echo " speaker #    = Set system speaker volume to # [0-10]";
-    echo " stop         = Stop iTunes.";
-    echo " quit         = Quit iTunes.";
-    echo " playlist     = Show playlists saved in iTunes.";
-    echo " tracks       = Show tracks for current or given playlist.";
-    echo " shuf         = Shuffle current playlist";
-    echo " nosh         = Do not shuffle current playlist";
+    echo " status          = Shows iTunes' status, current artist and track.";
+    echo " play            = Start playing iTunes.";
+    echo " pause           = Pause iTunes.";
+    echo " next            = Go to the next track.";
+    echo " prev            = Go to the previous track.";
+    echo " mute            = Mute iTunes' volume.";
+    echo " unmute          = Unmute iTunes' volume.";
+    echo " vol up          = Increase iTunes' volume by 10%";
+    echo " vol down        = Increase iTunes' volume by 10%";
+    echo " vol #           = Set iTunes' volume to # [0-100]";
+    echo " speaker up      = Increase system speaker volume by 10%";
+    echo " speaker down    = Decrease system speaker volume by 10%";
+    echo " speaker #       = Set system speaker volume to # [0-10]";
+    echo " stop            = Stop iTunes.";
+    echo " quit            = Quit iTunes.";
+    echo " list            = Show playlists saved in iTunes.";
+    echo " list <Playlist> = Stops current playlist, starts the given one.";
+    echo " tracks          = Show tracks for current or given playlist.";
+    echo " shuf            = Shuffle current playlist";
+    echo " nosh            = Do not shuffle current playlist";
 }
 
 if [ $# = 0 ]; then
@@ -115,8 +116,8 @@ while [ $# -gt 0 ]; do
             osascript -e 'tell application "Music" to quit';
             exit 1 ;;
 
-       ## addition playlist of choice
-       "playlist" )
+       # addition playlist of choice
+       list | playlist )
           if [ -n "$2" ]; then
              echo "Changing iTunes playlists to '$2'.";
              osascript -e 'tell application "Music"' -e "set new_playlist to \"$2\" as string" -e "play playlist new_playlist" -e "end tell";
