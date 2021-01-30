@@ -54,41 +54,41 @@ function volumectl {
 while [ $# -gt 0 ]; do
     arg=$1;
     case $arg in
-        "status" ) state=`osascript -e 'tell application "iTunes" to player state as string'`;
+        "status" ) state=`osascript -e 'tell application "Music" to player state as string'`;
             echo "iTunes is currently $state.";
             if [ $state = "playing" ]; then
-                artist=`osascript -e 'tell application "iTunes" to artist of current track as string'`;
-                track=`osascript -e 'tell application "iTunes" to name of current track as string'`;
+                artist=`osascript -e 'tell application "Music" to artist of current track as string'`;
+                track=`osascript -e 'tell application "Music" to name of current track as string'`;
                 echo "Current track $artist:  $track";
             fi
             break ;;
 
         "play"    ) echo "Playing iTunes.";
-            osascript -e 'tell application "iTunes" to play';
+            osascript -e 'tell application "Music" to play';
             break ;;
 
         "pause"   ) echo "Pausing iTunes.";
-            osascript -e 'tell application "iTunes" to pause';
+            osascript -e 'tell application "Music" to pause';
             break ;;
 
         "next"    ) echo "Going to next track." ;
-            osascript -e 'tell application "iTunes" to next track';
+            osascript -e 'tell application "Music" to next track';
             break ;;
 
         "prev"    ) echo "Going to previous track.";
-            osascript -e 'tell application "iTunes" to previous track';
+            osascript -e 'tell application "Music" to previous track';
             break ;;
 
         "mute"    ) echo "Muting iTunes volume level.";
-            osascript -e 'tell application "iTunes" to set mute to true';
+            osascript -e 'tell application "Music" to set mute to true';
             break ;;
 
         "unmute"  ) echo "Unmuting iTunes volume level.";
-            osascript -e 'tell application "iTunes" to set mute to false';
+            osascript -e 'tell application "Music" to set mute to false';
             break ;;
 
         "vol"     ) echo "Changing iTunes volume level.";
-            vol=`osascript -e 'tell application "iTunes" to sound volume as integer'`;
+            vol=`osascript -e 'tell application "Music" to sound volume as integer'`;
             volumectl $2
             osascript -e "tell application \"iTunes\" to set sound volume to $newvol";
             break ;;
@@ -99,40 +99,40 @@ while [ $# -gt 0 ]; do
             break ;;
 
         "stop"    ) echo "Stopping iTunes.";
-            osascript -e 'tell application "iTunes" to stop';
+            osascript -e 'tell application "Music" to stop';
             break ;;
 
         "quit"    ) echo "Quitting iTunes.";
-            osascript -e 'tell application "iTunes" to quit';
+            osascript -e 'tell application "Music" to quit';
             exit 1 ;;
 
        ## addition playlist of choice
        "playlist" )
           if [ -n "$2" ]; then
              echo "Changing iTunes playlists to '$2'.";
-             osascript -e 'tell application "iTunes"' -e "set new_playlist to \"$2\" as string" -e "play playlist new_playlist" -e "end tell";
+             osascript -e 'tell application "Music"' -e "set new_playlist to \"$2\" as string" -e "play playlist new_playlist" -e "end tell";
             break ;
           else
             # Show available iTunes playlists.
             echo "Playlists:";
-            osascript -e 'tell application "iTunes"' -e "set allPlaylists to (get name of every playlist)" -e "end tell";
+            osascript -e 'tell application "Music"' -e "set allPlaylists to (get name of every playlist)" -e "end tell";
             break;
          fi
          break;;
 
        "shuf" ) echo "Shuffle is ON.";
-             osascript -e 'tell application "iTunes" to set shuffle of current playlist to 1';
+             osascript -e 'tell application "Music" to set shuffle of current playlist to 1';
              break ;;
 
        "nosh" ) echo "Shuffle is OFF.";
-             osascript -e 'tell application "iTunes" to set shuffle of current playlist to 0';
+             osascript -e 'tell application "Music" to set shuffle of current playlist to 0';
              break ;;
        "tracks" )
           if [ -n "$2" ]; then
-             osascript -e 'tell application "iTunes"' -e "set new_playlist to \"$2\" as string" -e " get name of every track in playlist new_playlist" -e "end tell";
+             osascript -e 'tell application "Music"' -e "set new_playlist to \"$2\" as string" -e " get name of every track in playlist new_playlist" -e "end tell";
              break;
          fi
-             osascript -e 'tell application "iTunes" to get name of every track in current playlist';
+             osascript -e 'tell application "Music" to get name of every track in current playlist';
              break ;;
         "help" | * ) echo "help:";
             showHelp;
