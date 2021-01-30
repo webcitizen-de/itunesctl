@@ -1,13 +1,12 @@
 #!/bin/bash
-#
-###################################################
-# iTunes Command Line Control v1.1
-# written by David Schlosnagle
-# created   2001-11-08
-# edited    2010-06-01 rahul kumar
-# Upstream  https://gist.github.com/rkumar/503162
-# edited    2018-09-24 Christopher Engelmann
-###################################################
+#╔═════════════════════════════════════════════════════════════════════════════╗
+#║  iTunes Command Line Control v1.1                                           ║
+#║  by David Schlosnagle                                                       ║
+#║  and forked by rahul kumar - gist.github.com/rkumar/503162                  ║
+#║                                                                             ║
+#║  Current release edits by Christopher Engelmann                             ║
+#║  published as github.com/webcitizen-de/itunesctl                            ║
+#╚═════════════════════════════════════════════════════════════════════════════╝
 
 showHelp () {
     echo "-----------------------------";
