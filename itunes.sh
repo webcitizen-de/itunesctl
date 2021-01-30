@@ -51,6 +51,16 @@ function volumectl {
     fi
 }
 
+function split_into_sorted_multilines {
+
+    # remove the separator ", " and create a newline instead
+    # remove the trailing default semicolon of the putput
+
+    sed -e 's/, /\
+/g' -e 's/;//g' <<< "$1" | sort
+
+}
+
 while [ $# -gt 0 ]; do
     arg=$1;
     case $arg in
@@ -112,11 +122,16 @@ while [ $# -gt 0 ]; do
              echo "Changing iTunes playlists to '$2'.";
              osascript -e 'tell application "Music"' -e "set new_playlist to \"$2\" as string" -e "play playlist new_playlist" -e "end tell";
             break ;
+
           else
             # Show available iTunes playlists.
-            echo "Playlists:";
-            osascript -e 'tell application "Music"' -e "set allPlaylists to (get name of every playlist)" -e "end tell";
+            available_playlists="$(
+                osascript -e 'tell application "Music"' -e "set allPlaylists to (get name of every playlist)" -e "end tell"
+            );"
+            echo
+            split_into_sorted_multilines "$available_playlists"
             break;
+
          fi
          break;;
 
